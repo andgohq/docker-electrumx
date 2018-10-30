@@ -26,6 +26,9 @@ ENV SSL_KEYFILE ${DB_DIRECTORY}/electrumx.key
 ENV HOST ""
 WORKDIR /data
 
+RUN apk add --no-cache bash
+COPY ./wait-for-it.sh /usr/local/bin
+
 EXPOSE 50001 50002
 
 CMD ["init"]
