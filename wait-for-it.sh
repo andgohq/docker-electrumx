@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# [MIT License] forked from https://github.com/vishnubob/wait-for-it
+
 #   Use this script to test if a given TCP host/port are available
 
 cmdname=$(basename $0)
@@ -25,23 +27,23 @@ USAGE
 wait_for()
 {
     if [[ $TIMEOUT -gt 0 ]]; then
-        echoerr "$cmdname: waiting $TIMEOUT seconds for $HOST:$PORT"
+        echoerr "$cmdname: waiting $TIMEOUT seconds for $_HOST:$_PORT"
     else
-        echoerr "$cmdname: waiting for $HOST:$PORT without a timeout"
+        echoerr "$cmdname: waiting for $_HOST:$_PORT without a timeout"
     fi
     start_ts=$(date +%s)
     while :
     do
         if [[ $ISBUSY -eq 1 ]]; then
-            nc -z $HOST $PORT
+            nc -z $_HOST $_PORT
             result=$?
         else
-            (echo > /dev/tcp/$HOST/$PORT) >/dev/null 2>&1
+            (echo > /dev/tcp/$_HOST/$_PORT) >/dev/null 2>&1
             result=$?
         fi
         if [[ $result -eq 0 ]]; then
             end_ts=$(date +%s)
-            echoerr "$cmdname: $HOST:$PORT is available after $((end_ts - start_ts)) seconds"
+            echoerr "$cmdname: $_HOST:$_PORT is available after $((end_ts - start_ts)) seconds"
             break
         fi
         sleep 1
@@ -53,16 +55,16 @@ wait_for_wrapper()
 {
     # In order to support SIGINT during timeout: http://unix.stackexchange.com/a/57692
     if [[ $QUIET -eq 1 ]]; then
-        timeout $BUSYTIMEFLAG $TIMEOUT $0 --quiet --child --host=$HOST --port=$PORT --timeout=$TIMEOUT &
+        timeout $BUSYTIMEFLAG $TIMEOUT $0 --quiet --child --host=$_HOST --port=$_PORT --timeout=$TIMEOUT &
     else
-        timeout $BUSYTIMEFLAG $TIMEOUT $0 --child --host=$HOST --port=$PORT --timeout=$TIMEOUT &
+        timeout $BUSYTIMEFLAG $TIMEOUT $0 --child --host=$_HOST --port=$_PORT --timeout=$TIMEOUT &
     fi
     PID=$!
     trap "kill -INT -$PID" INT
     wait $PID
     RESULT=$?
     if [[ $RESULT -ne 0 ]]; then
-        echoerr "$cmdname: timeout occurred after waiting $TIMEOUT seconds for $HOST:$PORT"
+        echoerr "$cmdname: timeout occurred after waiting $TIMEOUT seconds for $_HOST:$_PORT"
     fi
     return $RESULT
 }
@@ -73,8 +75,8 @@ do
     case "$1" in
         *:* )
         hostport=(${1//:/ })
-        HOST=${hostport[0]}
-        PORT=${hostport[1]}
+        _HOST=${hostport[0]}
+        _PORT=${hostport[1]}
         shift 1
         ;;
         --child)
@@ -90,21 +92,21 @@ do
         shift 1
         ;;
         -h)
-        HOST="$2"
-        if [[ $HOST == "" ]]; then break; fi
+        _HOST="$2"
+        if [[ $_HOST == "" ]]; then break; fi
         shift 2
         ;;
         --host=*)
-        HOST="${1#*=}"
+        _HOST="${1#*=}"
         shift 1
         ;;
         -p)
-        PORT="$2"
-        if [[ $PORT == "" ]]; then break; fi
+        _PORT="$2"
+        if [[ $_PORT == "" ]]; then break; fi
         shift 2
         ;;
         --port=*)
-        PORT="${1#*=}"
+        _PORT="${1#*=}"
         shift 1
         ;;
         -t)
@@ -131,7 +133,7 @@ do
     esac
 done
 
-if [[ "$HOST" == "" || "$PORT" == "" ]]; then
+if [[ "$_HOST" == "" || "$_PORT" == "" ]]; then
     echoerr "Error: you need to provide a host and port to test."
     usage
 fi
