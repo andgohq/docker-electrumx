@@ -1,0 +1,4 @@
+This is just a test.
+
+Bitcoin Core $DAEMON_VERSION
+$VERSION
