@@ -10,15 +10,14 @@
 An easily configurable Docker image for running an Electrum server.
 
 ## Usage
+**Installation** 
 
-```
-docker run \
-  -v /home/username/electrumx:/data \
-  -e DAEMON_URL=http://user:pass@host:port \
-  -e COIN=BitcoinSegwit \
-  -p 50002:50002 \
-  lukechilds/electrumx
-```
+Build the image with `docker build -t andgohq/bitcoind .`
+
+**Running the instance**
+
+To run the instance, use the provided docker-compose files in [Marunouchi-Infra](https://github.com/andgohq/marunouchi-infra) and `docker-compose up -d`
+
 
 If there's an SSL certificate/key (`electrumx.crt`/`electrumx.key`) in the `/data` volume it'll be used. If not, one will be generated for you.
 
