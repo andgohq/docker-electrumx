@@ -12,7 +12,7 @@ An easily configurable Docker image for running an Electrum server.
 ## Usage
 **Installation** 
 
-Build the image with `docker build -t andgohq/bitcoind .`
+Build the image with `docker build -t andgohq/electrumx .`
 
 **Running the instance**
 
