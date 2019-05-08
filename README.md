@@ -16,6 +16,9 @@ Build the image with `docker build -t andgohq/electrumx .`
 
 **Running the instance**
 
+Since the block generation is 20 seconds, the ElectrumX server database flush count is running full after ~14 days. 
+In order to tackle this, it is necessary to remove the electrumx database folder and let it re-build on the next ElectrumX startup.
+
 To run the instance, use the provided docker-compose files in [Marunouchi-Infra](https://github.com/andgohq/marunouchi-infra) and `docker-compose up -d`
 
 
